@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  // output = "../generated/prisma"
 }
 
 datasource db {
@@ -16,11 +17,11 @@ datasource db {
 model Movies {
   id        Int       @id @default(autoincrement())
   title     String   
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
   year      Int
   category  Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  Int
+  categoryId  Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
 }
 

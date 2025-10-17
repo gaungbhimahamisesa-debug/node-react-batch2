@@ -1,123 +1,116 @@
-const { PrismaClient } = require("../../generated/prisma");
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-// CREATE
-const createMovie = async (req, res) => {
-  let { title, year } = req.body;
+const createCategory = async (req, res) => {
+  let { name } = req.body;
   try {
-    const movies = await prisma.movies.create({
+    const categoryCreate = await prisma.category.create({
       data: {
-        title,
-        year,
+        name,
       },
     });
 
     res.json({
-      info: movies,
-      message: "Movie was succesfully Created",
+      info: categoryCreate,
+      message: "Category was succesfully Created",
       status: "Success",
     });
     return;
   } catch (err) {
     res.json({
       info: null,
-      message: "Movie was unsuccesfully Created",
+      message: "Category was unsuccesfully Created",
       status: "Unsuccess",
     });
   }
 };
 
-// READ
-const readMovie = async (req, res) => {
+const readCategory = async (req, res) => {
   try {
-    const movies = await prisma.movies.findMany();
+    const categoryRead = await prisma.movies.findMany();
     res.json({
-      info: movies,
-      message: "Movie was succesfully Fetch",
+      info: categoryRead,
+      message: "Category was succesfully Fetch",
       status: "Success",
     });
     return;
   } catch (err) {
     res.status(404).json({
-      data: null,
-      message: "Movie was Unsuccesfully Fetch",
+      data: err.message,
+      message: "Category was Unsuccesfully Fetch",
       status: "Error",
     });
   }
 };
 
-// READ...BYID
-const readMovieById = async (req, res) => {
+const readCategoryById = async (req, res) => {
   let { id } = req.params;
   try {
-    const movies = await prisma.movies.findUnique({
+    const categoryRead = await prisma.category.findUnique({
       where: {
         id: Number(id),
       },
     });
 
-    if (movies) {
-      message = "Movie Was Succesfully Fetch";
+    if (categoryRead) {
+      message = "Category Was Succesfully Fetch";
       stat = "Success";
       status = 200;
     } else {
-      message = "Movie Was not Found";
+      message = "Category Was not Found";
       stat = "Not Found";
       status = 404;
     }
 
     res.status(status).json({
-      info: movies,
+      info: categoryRead,
       message,
       status: stat,
     });
     return;
   } catch (err) {
     res.json({
-      info: movies,
+      info: categoryRead,
       message: err.message,
       status: "error",
     });
   }
 };
 
-// UPDATE
-const updateMovie = async (req, res) => {
-  let { title, year } = req.body;
+const updateCategory = async (req, res) => {
+  let { name } = req.body;
   let { id } = req.params;
 
   try {
-    const movies = await prisma.movies.update({
+    const categoryUpdate = await prisma.category.update({
       where: {
         id: Number(id),
       },
       data: {
-        title,
-        year,
+        name,
       },
     });
 
     res.json({
-      info: movies,
-      message: "Movie was Successfuly Updated",
+      info: categoryUpdate,
+      message: "Category was Successfuly Updated",
       status: "success",
     });
     return;
   } catch (err) {
     res.json({
       info: null,
-      message: "Movie was Notfound",
+      message: "Category was Notfound",
       status: "not found",
     });
   }
 };
 
-// DELETE
-const deleteMovie = async (req, res) => {
+const deleteCategory = async (req, res) => {
   let { id } = req.params;
   try {
-    const movies = await prisma.movies.delete({
+    await prisma.category.delete({
       where: {
         id: Number(id),
       },
@@ -137,11 +130,12 @@ const deleteMovie = async (req, res) => {
   }
 };
 
-// MODULE EXPORTS
 module.exports = {
-  createMovie,
-  readMovie,
-  readMovieById,
-  updateMovie,
-  deleteMovie,
+  createCategory,
+  readCategory,
+  readCategoryById,
+  updateCategory,
+  deleteCategory,
 };
+
+console.log("test");
