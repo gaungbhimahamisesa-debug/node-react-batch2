@@ -1,12 +1,12 @@
-import { useState } from "react";
 import "./App.css";
-import CRUDAxios from "./pages/CRUDAxios";
-import Home from "./pages/home";
+import CRUDaxios from "./pages/CRUDAxios";
+import MainRoutes from "./routes/mainRoutes";
 
 function App() {
   return (
     <>
-      <CRUDAxios></CRUDAxios>
+      <MainRoutes></MainRoutes>
+      {/* <CRUDaxios></CRUDaxios> */}
     </>
   );
 }

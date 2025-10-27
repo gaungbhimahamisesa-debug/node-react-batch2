@@ -1,169 +1,236 @@
-import { useEffect, useState } from "react";
-import "../CRUDAxios.css";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
-function CRUDAxios() {
-  const [data, setData] = useState([]);
+function CRUDaxios() {
+  // const initialInput = {title:"",year:0,categoryId:null, id:null}
+  const [dataMovie, setDataMovie] = useState([]);
   const [dataCategory, setDataCategory] = useState([]);
-  const [title, setTitle] = useState([]);
+  // const [input, setInput] = useState({initialInput})
+  const [title, setTitle] = useState("");
   const [year, setYear] = useState("");
   const [id, setId] = useState("");
-  const [categoryId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
-    fetchData();
     fetchDataMovie();
     fetchDataCategory();
   }, []);
 
   const fetchDataMovie = () => {
     axios
-      .get("htpp://localhost:3000/api/movie")
+      .get("http://localhost:3000/api/movie")
       .then((response) => {
-        setData(response.data.info);
+        setDataMovie(response.data.movies);
+        console.log(response.data.movies);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-const handleTitleChange = (event) => {
-  setTitle(event.target.value);
-  console.log(title);
-};
+  const fetchDataCategory = () => {
+    axios
+      .get("http://localhost:3000/api/category")
+      .then((response) => {
+        let result = response.data.info;
+        setDataCategory(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-const handleYearChange = (event) => {
-  setYear(event.target.value);
-  console.log(year);
-};
+  // const handleChange = (event) => {
+  //     let {name, value} = event.target
+  //     setInput({...input, [name]:value})
+  // }
 
-const handleCategoryIdChange = (event) => {
-  setCategoryId(event.target.value);
-  console.log(categoryId);
-};
+  // const handelSubmit = async (event) =>{
+  //     event.preventDefault()
+  //     try{
+  //         await axios.post('http://localhost:3000/api/movie', {title: input.title, year:Number(input.year), categoryId:Number(input.categoryId)})
+  //         fetchDataMovie()
+  //         fetchDataCategory()
+  //         console.log(input)
+  //         setInput({...input})
+  //     }catch(err){
+  //         alert(err)
+  //     }
+  // }
 
-const handleSubmit =async (event) => {
-  event.preventDefault();
-  try {
-    let posting = await axios.post("http://localhost:3000/api/movie", {
-      title: (title),
-      year: Number(year),
-      categoryId: Number(categoryId)
-    });
-    console.log(posting);
-    fetchDataMovie();
-    fetchDataCategory();
-  } catch (err) {
-    alert(err);
-  }
-};
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+    console.log(title);
+  };
 
-  const handleUpdate = async(id) => {
-      try {
-    let update = await axios.put("http://localhost:3000/api/movie/$(id)", {
-      title: (title),
-      year: Number(year),
-      categoryId: Number(categoryId)
-    });
-    console.log('Item Updated Successfully:', update.data);
-    fetchDataMovie();
-    fetchDataCategory();
-  } catch (err) {
-    alert(err);
-  }
-}
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
+    console.log(year);
+  };
 
-const handleDelete = async(id) => {
-      try {
-    let response = await axios.delete('http://localhost:3000/api/movie/$(id)')
-    console.log('Item Deleted Successfully:', response.data);
-    fetchDataMovie();
-    fetchDataCategory();
-  } catch (err) {
-    alert(err);
-  }
-}
+  const handleCategoryIdChange = (event) => {
+    setCategoryId(event.target.value);
+    console.log(categoryId);
+  };
 
-const handleDelete = async(id) => {
-  try {
-    axios.get('http://localhost:3000/api/movie/$(id)'). then ((response) => {
-        let result = response.data.info
-        console.log(result)
-        setTitle[result.title]
-        setYear[result.year]
-        setCategoryId[result.categoryId]
-      })}catch(err) {
-          console.log(err)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      let txtSimpan = "Apa Anda yakin Menyimpan Data???";
+      let txtUpdate = "Apa Anda yakin Memperbaharui Data???";
+
+      if (id) {
+        if (confirm(txtUpdate)) {
+          await axios.put(`http://localhost:3000/api/movie/${id}`, {
+            title: title,
+            year: Number(year),
+            categoryId: Number(categoryId),
+          });
+        }
+      } else {
+        if (confirm(txtSimpan)) {
+          await axios.post("http://localhost:3000/api/movie", {
+            title: title,
+            year: Number(year),
+            categoryId: Number(categoryId),
+          });
+        }
+      }
+      fetchDataMovie();
+      fetchDataCategory();
+      hapusData();
+    } catch (err) {
+      alert(err);
     }
-}
+  };
+
+  const hapusData = () => {
+    setTitle("");
+    setYear("");
+    setCategoryId("");
+    setId("");
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      axios.get(`http://localhost:3000/api/movie/${id}`).then((response) => {
+        let result = response.data.info;
+        console.log(result);
+        setTitle(result.title);
+        setYear(result.year);
+        setCategoryId(result.categoryId);
+        setId(result.id);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
-      <h1> CRUD AXIOS </h1>
-    <fieldset className="fieldset bg-base-300 border-300 rounded-box-w-90 border p-4">
-      <form onSubmit={handleSubmit}>
-        <label className="label" for="title">Movie Title</label>
-        <input className="input"
-          type="text"
-          id="title"
-          name="title"
-          onChange="{handleTitleChange}
-          value=(title)
-          placeholder="Movies"></input>
+      <h1>MOVIES</h1>
+      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <label for="tile" className="label">
+              Movie Title
+            </label>
+            <input
+              className="input"
+              type="text"
+              id="title"
+              name="title"
+              onChange={handleTitleChange}
+              value={title}
+              placeholder="Movie Title.."
+            />
 
-        <label className="label" for="year">year</label>
-        <input className="input"
-          type="text"
-          id="year"
-          name="year"
-          onChange="{handleYearChange}
-          placeholder="Movies Released date"></input>
+            <label for="year" className="label">
+              Realeased Year
+            </label>
+            <input
+              className="input"
+              type="number"
+              id="year"
+              name="year"
+              onChange={handleYearChange}
+              value={year}
+              placeholder="Movie Release Date.."
+              min="1980"
+              max="2025"
+            />
 
-        <label for="category">Category</label>
-        <select value=(categoryId) className="select select neutral" id="category" name="category" onChange={handleCategoryChange}>
-                {dataCategory.map((item.index) => {
-                      return (
-                        <option key={index} value={item.id}> {item.name} </option>
-                      )
-                      })}
-        </select>
-                      
+            <label for="categoryId" className="label">
+              Category
+            </label>
+            <select
+              value={categoryId}
+              className="select select-neutral"
+              id="categoryId"
+              name="categoryId"
+              onChange={handleCategoryIdChange}
+            >
+              {dataCategory.map((item, index) => {
+                return (
+                  <option key={index} value={item.id}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select>
 
-  <input type="submit"></input>
-  </form> */}
-
-        <input type="submit" value="submit" className='btn btn-info' />
-      </form>
+            <input
+              type="submit"
+              value="Submit"
+              className="btn btn-neutral mt-4"
+            />
+          </form>
+        </div>
+      </div>
 
       <div className="overflow-x-auto">
-      <table className-='table table-zebra'>
-        <thead>
-          <tr>
-            <th>no</th>
-            <th>judul</th>
-            <th>tahun</th>
-            <th>kategori</th>
-          </tr>
-        </thead>
+        <table className="table table-zebra">
+          <thead>
+            <tr>
+              <th>Nomor</th>
+              <th>Judul</th>
+              <th>Tahun</th>
+              <th>Kategori</th>
+              <th colSpan="2">Aksi</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {data.map((item, index) => {
-            return (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{item.title}</td>
-                <td>{item.year}</td>
-                <td>{item.categoryById}</td>
-                <td><input type="submit" value="Ubah" className='btn btn-warning' onClick={()handleEdit./></td>
-                <td><input type="submit" value="Ubah"className='btn btn-error'/></td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+          <tbody>
+            {dataMovie.map((item, index) => {
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.title}</td>
+                  <td>{item.year}</td>
+                  <td>{item.category.name}</td>
+                  <td>
+                    <input
+                      type="submit"
+                      value="Ubah"
+                      className="btn btn-warning"
+                      onClick={() => handleEdit(item.id)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="submit"
+                      value="Hapus"
+                      className="btn btn-error"
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </>
   );
 }
 
-export default CRUDAxios;
+export default CRUDaxios;
