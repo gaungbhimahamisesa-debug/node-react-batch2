@@ -84,7 +84,7 @@ const readMovieById = async (req, res) => {
 };
 
 const updateMovie = async (req, res) => {
-  let { title, year } = req.body;
+  let { title, year, categoryId } = req.body;
   let { id } = req.params;
 
   try {
@@ -95,6 +95,7 @@ const updateMovie = async (req, res) => {
       data: {
         title,
         year,
+        categoryId,
       },
     });
 
