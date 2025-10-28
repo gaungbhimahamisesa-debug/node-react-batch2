@@ -16,8 +16,8 @@ function CRUDaxios() {
     fetchDataCategory();
   }, []);
 
-  const fetchDataMovie = () => {
-    axios
+  const fetchDataMovie = async () => {
+    await axios
       .get("http://localhost:3000/api/movie")
       .then((response) => {
         setDataMovie(response.data.movies);
@@ -28,8 +28,8 @@ function CRUDaxios() {
       });
   };
 
-  const fetchDataCategory = () => {
-    axios
+  const fetchDataCategory = async () => {
+    await axios
       .get("http://localhost:3000/api/category")
       .then((response) => {
         let result = response.data.info;

@@ -16,24 +16,24 @@ datasource db {
 model Movies {
   id          Int      @id @default(autoincrement())
   title       String   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
   year        Int
   category    Category?  @relation(fields: [categoryId], references: [id])
   categoryId  Int?
   user        User?  @relation(fields: [userId], references: [id])
   userId      Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 
 model Category{
   id          Int       @id @default(autoincrement())
   name        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
   movies      Movies[]
   user        User?  @relation(fields: [userId], references: [id])
   userId      Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
@@ -43,4 +43,6 @@ model User {
   password  String
   movies    Movies[]
   category  Category[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
