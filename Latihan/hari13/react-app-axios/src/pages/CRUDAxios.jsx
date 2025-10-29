@@ -11,6 +11,9 @@ function CRUDaxios() {
   const [id, setId] = useState("");
   const [categoryId, setCategoryId] = useState("");
 
+  const [perPage, setPerPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
   useEffect(() => {
     fetchDataMovie();
     fetchDataCategory();
@@ -92,7 +95,7 @@ function CRUDaxios() {
           await axios.post("http://localhost:3000/api/movie", {
             title: title,
             year: Number(year),
-            categoryId: Number(categoryId),
+            categoryId: Number(categoryId || dataCategory[0]?.id),
           });
         }
       }
@@ -123,6 +126,35 @@ function CRUDaxios() {
       });
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const deleteData = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/movie/${id}`
+      );
+      fetchDataMovie();
+      fetchDataCategory();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const totalPage = Math.ceil(dataMovie.length / pageSize);
+  const startindex = (perPage - 1) * pageSize;
+  const endIndex = startindex + pageSize;
+  const paginatedData = dataMovie.slice(startindex, endIndex);
+
+  const handlePrevPage = () => {
+    if (perPage > 1) {
+      setPerPage(perPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (perPage < totalPage) {
+      setPerPage(perPage + 1);
     }
   };
 
@@ -201,13 +233,13 @@ function CRUDaxios() {
           </thead>
 
           <tbody>
-            {dataMovie.map((item, index) => {
+            {paginatedData.map((item, index) => {
               return (
                 <tr key={index}>
-                  <td>{index + 1}</td>
+                  <td>{startindex + index + 1}</td>
                   <td>{item.title}</td>
                   <td>{item.year}</td>
-                  <td>{item.category.name}</td>
+                  <td>{item.category?.name}</td>
                   <td>
                     <input
                       type="submit"
@@ -221,6 +253,7 @@ function CRUDaxios() {
                       type="submit"
                       value="Hapus"
                       className="btn btn-error"
+                      onClick={() => deleteData(item.id)}
                     />
                   </td>
                 </tr>
@@ -228,6 +261,14 @@ function CRUDaxios() {
             })}
           </tbody>
         </table>
+        <div className="space-x-5">
+          <button className="btn btn-secondary btn-sm" onClick={handlePrevPage}>
+            Prev
+          </button>
+          <button className="btn btn-secondary btn-sm" onClick={handleNextPage}>
+            Next
+          </button>
+        </div>
       </div>
     </>
   );
