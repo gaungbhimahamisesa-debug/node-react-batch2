@@ -1,6 +1,7 @@
 import { Routes, Route, Outlet, Link, BrowserRouter } from "react-router";
 import CRUDaxios from "../pages/CRUDAxios";
 import MainLayout from "../layout/mainLayout";
+import Category from "../pages/Category";
 
 function MainRoutes() {
   return (
@@ -13,7 +14,7 @@ function MainRoutes() {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="movie" element={<CRUDaxios />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="category" element={<Category />} />
 
             {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit

@@ -14,11 +14,11 @@ function MainLayout() {
             <Link to="/movie">Movies</Link>
           </li>
           <li className="btn btn-ghost text-xl">
-            <Link to="/dashboard">Categories</Link>
+            <Link to="/category">Categories</Link>
           </li>
-          <li className="btn btn-ghost text-xl">
+          {/* <li className="btn btn-ghost text-xl">
             <Link to="/nothing-here">Nothing Here</Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
 
