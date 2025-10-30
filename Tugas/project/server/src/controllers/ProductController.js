@@ -1,8 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const createProduct = async (requestAnimationFrame, res) => {
+export const createProduct = async (requestAnimationFrame, res) => {
     let { name, price, description, imageUrl } = requestAnimationFrame.body;
     try {
         const productCreate = await prisma.product.create({
@@ -27,7 +27,7 @@ return;
 }
 };
 
-const readProduct = async (req, res) => {
+export const readProduct = async (req, res) => {
     try {
         const productRead = await prisma.product.findMany();
         res.json({
@@ -45,7 +45,7 @@ const readProduct = async (req, res) => {
     }
 }
 
-const readProductById = async (req, res) => {
+export const readProductById = async (req, res) => {
     let { id } = req.params;
     try {
         const productRead = await prisma.product.findUnique({
@@ -79,7 +79,7 @@ const readProductById = async (req, res) => {
     }
     }
 
-const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
     let { name } = req.body;
     let { id } = req.params;
 
@@ -108,7 +108,7 @@ const updateProduct = async (req, res) => {
 }
 }
 
-const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
     let { id } = req.params;
     try {
         await prisma.product.delete({
@@ -131,12 +131,5 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = {
-    createProduct,
-    readProduct,
-    readProductById,
-    updateProduct,
-    deleteProduct,
-};
 
 console.log("test");
